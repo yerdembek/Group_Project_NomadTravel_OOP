@@ -7,7 +7,7 @@ https://github.com/yerdembek/Group_Project_NomadTravel_OOP
 Our team
 - Beknur Erdembek
 - Beknur Tanibergen
-- Nurdaulet
+- Nurdaulet Usenbai
 - Nurbakyt Abdikasym
 
 Introduction  
