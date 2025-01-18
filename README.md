@@ -5,7 +5,7 @@ Link to GitHub repository
 https://github.com/yerdembek/Group_Project_NomadTravel_OOP
 
 Our team
-- Bencnur Erdembek
+- Beknur Erdembek
 - Beknur Tanibergen
 - Nurdaulet
 - Nurbakyt Abdikasym
