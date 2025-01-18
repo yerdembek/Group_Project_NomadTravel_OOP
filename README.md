@@ -10,7 +10,7 @@ Our team
 - Nurdaulet
 - Nurbakyt Abdikasym
 
-Introduction
+Introduction  
 The Nomad Travel project is aimed at creating a convenient and functional catalog for selling tours within Kazakhstan. Its goal is to simplify the search and interaction with travel agencies for users, as well as to provide the administrator with effective tools for data management. 
 
 Project goals
@@ -18,7 +18,7 @@ Project goals
 - Ensure transparency of information.
 - Minimize manual operations through search and filtering automation.
 
-Tasks
+Tasks  
 Work with the user:
 1.	Validation of entered data (e.g. correctness of phone, mail format). 2. Processing of incorrect entries (error messages).
 2. Processing of incorrect inputs (error messages). 2.
@@ -38,8 +38,8 @@ Performance and testing:
 1. Search and filter optimization.
 2. Tests with JUnit.
 
-Scope
--The catalog will be used by individuals and travel agencies to search for tours, assess their quality and interact with organizations providing them. Main audience: domestic tourists of Kazakhstan.
+Scope  
+The catalog will be used by individuals and travel agencies to search for tours, assess their quality and interact with organizations providing them. Main audience: domestic tourists of Kazakhstan.
 
 Stages of development
 1. research and specification of requirements.
