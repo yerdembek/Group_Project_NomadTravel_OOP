@@ -20,20 +20,20 @@ Project goals
 
 Tasks  
 Work with the user:
-1.	Validation of entered data (e.g. correctness of phone, mail format). 2. Processing of incorrect entries (error messages).
-2. Processing of incorrect inputs (error messages). 2.
+1.	Validation of entered data (e.g. correctness of phone, mail format).
+2. Processing of incorrect inputs (error messages).
 3.	Simple and convenient interface for search and filtering (by name, city, services).
 4. Organization of roles (administrator, user).
-5.	Keeping a log of actions (what is added, deleted).
+5.	Keeping a log of actions (what is added, deleted).  
 Working with data:
 1.	Creating travel agency objects (name, city, services, contacts).
 2.	Adding/removing travel agencies from the catalog.
 3.	Filtering and search by various criteria (city, services, rating).
 4.	Sorting and counting objects.
-5.	Updating data (editing).
+5.	Updating data (editing).  
 Saving and downloading data:
 1.	Saving data to JSON/files.
-2. handling read/write errors.
+2. handling read/write errors.  
 Performance and testing:
 1. Search and filter optimization.
 2. Tests with JUnit.
