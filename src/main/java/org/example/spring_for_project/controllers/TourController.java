@@ -3,6 +3,7 @@ package org.example.spring_for_project.controllers;
 import org.example.spring_for_project.models.Tour;
 import org.example.spring_for_project.repositories.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,4 +38,28 @@ public class TourController {
     public void deleteTour(@PathVariable Long id) {
         tourRepository.deleteById(id);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tour> updateTour(@PathVariable Long id, @RequestBody Tour updatedTour) {
+        return tourRepository.findById(id)
+                .map(existingTour -> {
+                    existingTour.setName(updatedTour.getName());
+                    existingTour.setDescription(updatedTour.getDescription());
+                    existingTour.setPrice(updatedTour.getPrice());
+                    existingTour.setStartDate(updatedTour.getStartDate());
+                    existingTour.setEndDate(updatedTour.getEndDate());
+                    existingTour.setLocation(updatedTour.getLocation());
+                    existingTour.setMaxParticipants(updatedTour.getMaxParticipants());
+                    if (updatedTour.getDuration() != null) {
+                        existingTour.setDuration(updatedTour.getDuration());
+                    }
+                    existingTour.setCategory(updatedTour.getCategory());
+                    existingTour.setImages(updatedTour.getImages());
+                    tourRepository.save(existingTour);
+                    return ResponseEntity.ok(existingTour);
+                })
+                .orElse(ResponseEntity.notFound().build());
+
+    }
 }
+
