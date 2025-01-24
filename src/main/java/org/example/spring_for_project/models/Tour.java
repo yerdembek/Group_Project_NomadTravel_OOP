@@ -152,6 +152,14 @@ public class Tour {
         this.images = images;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
 
     @Override
     public String toString() {
