@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SpringForProjectApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SpringForProjectApplication.class, args);
     }
-
 }
