@@ -9,8 +9,12 @@ import org.example.spring_for_project.repositories.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/tours")
@@ -27,15 +31,26 @@ public class TourController {
     private Tour tour;
 
     // Получить все туры
+
     @GetMapping
     public List<Tour> getAllTours() {
         return tourRepository.findAll();
     }
-
     // Получить тур по ID
+
     @GetMapping("/{id}")
     public Tour getTourById(@PathVariable Long id) {
         return tourRepository.findById(id).orElseThrow(() -> new RuntimeException("Тур не найден!"));
+    }
+
+    @GetMapping("/filter")
+    public List<Tour> getFilteredTours(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Duration minDuration,
+            @RequestParam(required = false) Duration maxDuration) {
+        return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDuration, maxDuration);
     }
 
     // Добавить новый тур
