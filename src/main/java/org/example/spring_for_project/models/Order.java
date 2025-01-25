@@ -35,6 +35,7 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderDate; // Дата создания заказа
 
+
     // Конструктор по умолчанию
     public Order() {}
 

@@ -54,13 +54,14 @@ public class TourController {
         // Проверяем наличие связанных заказов
         List<Order> relatedOrders = orderRepository.findByTour_Id(id);
         if (!relatedOrders.isEmpty()) {
-            throw new RuntimeException("Тур связан с заказами и не может быть удалён.");
+            return ResponseEntity.badRequest().body("Тур связан с заказами и не может быть удалён.");
         }
 
         // Если зависимостей нет, удаляем тур
         tourRepository.deleteById(id);
         return ResponseEntity.ok("Тур с ID " + id + " успешно удалён.");
     }
+
 
 
     @PutMapping("/{id}")

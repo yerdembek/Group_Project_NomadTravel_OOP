@@ -1,0 +1,114 @@
+{
+  "info": {
+    "name": "Tour API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Tours",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/tours",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tours"]
+        }
+      }
+    },
+    {
+      "name": "Get Tour by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/tours/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tours", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Tour",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Пустынный тур\",\n  \"description\": \"Экскурсия по пескам Казахстана\",\n  \"price\": 400.0,\n  \"startDate\": \"2025-03-01\",\n  \"endDate\": \"2025-03-07\",\n  \"location\": \"Кызылорда\",\n  \"maxParticipants\": 15,\n  \"category\": \"Экскурсия\",\n  \"duration\": 7,\n  \"images\": [\"image3.jpg\", \"image4.jpg\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/tours",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tours"]
+        }
+      }
+    },
+    {
+      "name": "Update Tour",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Обновленный тур\",\n  \"description\": \"Обновлённое описание\",\n  \"price\": 500.0,\n  \"startDate\": \"2025-04-01\",\n  \"endDate\": \"2025-04-10\",\n  \"location\": \"Астана\",\n  \"maxParticipants\": 20,\n  \"category\": \"Культура\",\n  \"duration\": 10,\n  \"images\": [\"image5.jpg\", \"image6.jpg\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/tours/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tours", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Tour",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/tours/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "tours", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
