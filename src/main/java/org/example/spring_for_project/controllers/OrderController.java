@@ -1,7 +1,7 @@
 package org.example.spring_for_project.controllers;
 
 import org.example.spring_for_project.models.Order;
-import org.example.spring_for_project.repositories.OrderRepository;
+import org.example.spring_for_project.repositories.interfaces.IOrderRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +13,9 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final OrderRepository orderRepository;
+    private final IOrderRepository orderRepository;
 
-    public OrderController(OrderRepository orderRepository) {
+    public OrderController(IOrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 

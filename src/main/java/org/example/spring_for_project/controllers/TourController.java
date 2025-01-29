@@ -1,11 +1,10 @@
 package org.example.spring_for_project.controllers;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import org.example.spring_for_project.controllers.interfaces.ITourController;
 import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.models.Tour;
-import org.example.spring_for_project.repositories.OrderRepository;
-import org.example.spring_for_project.repositories.TourRepository;
+import org.example.spring_for_project.repositories.interfaces.IOrderRepository;
+import org.example.spring_for_project.repositories.interfaces.ITourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,37 +14,36 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/api/tours")
-public class TourController {
+public class TourController implements ITourController {
 
     @Autowired
-    private TourRepository tourRepository;
+    private ITourRepository tourRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @ManyToOne
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
+    private IOrderRepository orderRepository;
 
     @GetMapping
+    @Override
     public List<Tour> getAllTours() {
         return tourRepository.findAll();
     }
 
     @GetMapping("/{id}")
+    @Override
     public Tour getTourById(@PathVariable Long id) {
         return tourRepository.findById(id).orElseThrow(() -> new RuntimeException("Тур не найден!"));
     }
 
     @GetMapping("/filter/category")
+    @Override
     public List<Tour> getToursByCategory(@RequestParam String category) {
         return tourRepository.findByCategory(category);
     }
 
     @GetMapping("/filter/duration")
+    @Override
     public List<Tour> getToursByDurationRange(
             @RequestParam String minDuration,
             @RequestParam String maxDuration) {
@@ -54,22 +52,36 @@ public class TourController {
         return tourRepository.findByDurationBetween(min, max);
     }
 
+    @Override
+    public List<Tour> getFilteredTours(String category, BigDecimal minPrice, BigDecimal maxPrice, Duration minDuration, Duration maxDuration) {
+        return List.of();
+    }
+
     @GetMapping("/filter")
-    public List<Tour> getFilteredTours(
+    public List<Tour> filterTours(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) Duration minDuration,
-            @RequestParam(required = false) Duration maxDuration) {
-        return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDuration, maxDuration);
+            @RequestParam(required = false) String minDuration,
+            @RequestParam(required = false) String maxDuration
+    ) {
+        // Преобразуем строки в объекты Duration
+        Duration minDur = (minDuration != null) ? Duration.parse(minDuration) : null;
+        Duration maxDur = (maxDuration != null) ? Duration.parse(maxDuration) : null;
+
+        // Вызываем метод репозитория
+        return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDur, maxDur);
     }
 
+
     @PostMapping
+    @Override
     public Tour createTour(@RequestBody Tour tour) {
         return tourRepository.save(tour);
     }
 
     @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<String> deleteTour(@PathVariable Long id) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Тур с ID " + id + " не найден!"));
@@ -84,6 +96,7 @@ public class TourController {
     }
 
     @PutMapping("/{id}")
+    @Override
     public ResponseEntity<Tour> updateTour(@PathVariable Long id, @RequestBody Tour updatedTour) {
         return tourRepository.findById(id)
                 .map(existingTour -> {
@@ -103,7 +116,5 @@ public class TourController {
                     return ResponseEntity.ok(existingTour);
                 })
                 .orElse(ResponseEntity.notFound().build());
-
     }
 }
-

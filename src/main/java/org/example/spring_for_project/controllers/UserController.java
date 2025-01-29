@@ -1,7 +1,7 @@
 package org.example.spring_for_project.controllers;
 
 import org.example.spring_for_project.models.User;
-import org.example.spring_for_project.repositories.UserRepository;
+import org.example.spring_for_project.repositories.interfaces.IUserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

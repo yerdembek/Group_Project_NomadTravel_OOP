@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tours")
@@ -176,5 +178,4 @@ public class Tour {
                 ", images=" + images +
                 '}';
     }
-
 }

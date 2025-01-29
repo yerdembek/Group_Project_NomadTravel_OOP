@@ -1,29 +1,22 @@
 package org.example.spring_for_project.repositories;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.example.spring_for_project.models.Tour;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import java.math.BigDecimal;
-import java.time.Duration;
+import org.example.spring_for_project.repositories.custom.CustomTourRepository;
+
 import java.util.List;
 
-public interface TourRepository extends JpaRepository<Tour, Long> {
+public class TourRepository implements CustomTourRepository {
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    List<Tour> findByDurationBetween(Duration minDuration, Duration maxDuration);
-
-    List<Tour> findByCategory(String category);
-
-    @Query("SELECT t FROM Tour t WHERE " +
-            "(:category IS NULL OR t.category = :category) AND " +
-            "(:minPrice IS NULL OR t.price >= :minPrice) AND " +
-            "(:maxPrice IS NULL OR t.price <= :maxPrice) AND " +
-            "(:minDuration IS NULL OR t.duration >= :minDuration) AND " +
-            "(:maxDuration IS NULL OR t.duration <= :maxDuration)")
-    List<Tour> findFilteredTours(@Param("category") String category,
-                                 @Param("minPrice") BigDecimal minPrice,
-                                 @Param("maxPrice") BigDecimal maxPrice,
-                                 @Param("minDuration") Duration minDuration,
-                                 @Param("maxDuration") Duration maxDuration);
+    @Override
+    public List<Tour> findCustomTours() {
+        String query = "SELECT t FROM Tour t WHERE t.price > 100";
+        TypedQuery<Tour> typedQuery = entityManager.createQuery(query, Tour.class);
+        return typedQuery.getResultList();
+    }
 }
