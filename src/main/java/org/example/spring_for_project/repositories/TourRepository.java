@@ -10,6 +10,11 @@ import java.util.List;
 
 public interface TourRepository extends JpaRepository<Tour, Long> {
 
+
+    List<Tour> findByDurationBetween(Duration minDuration, Duration maxDuration);
+
+    List<Tour> findByCategory(String category);
+
     @Query("SELECT t FROM Tour t WHERE " +
             "(:category IS NULL OR t.category = :category) AND " +
             "(:minPrice IS NULL OR t.price >= :minPrice) AND " +

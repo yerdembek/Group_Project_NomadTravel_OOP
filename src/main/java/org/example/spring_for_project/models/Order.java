@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders") // Имя таблицы в базе данных
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -15,31 +15,29 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false) // Связь с пользователем
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "tour_id", nullable = false) // Связь с туром
+    @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
     @Column(nullable = false)
-    private Integer seatsBooked; // Количество забронированных мест
+    private Integer seatsBooked;
 
     @Column(nullable = false)
-    private BigDecimal totalPrice; // Общая стоимость заказа
+    private BigDecimal totalPrice;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus; // Статус оплаты
+    private PaymentStatus paymentStatus;
 
     @Column(nullable = false)
-    private LocalDateTime orderDate; // Дата создания заказа
+    private LocalDateTime orderDate;
 
 
-    // Конструктор по умолчанию
     public Order() {}
 
-    // Конструктор со всеми параметрами
     public Order(Long id, User user, Tour tour, Integer seatsBooked, BigDecimal totalPrice, PaymentStatus paymentStatus, LocalDateTime orderDate) {
         this.id = id;
         this.user = user;
@@ -50,7 +48,7 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    // Геттеры и сеттеры
+
     public Long getId() {
         return id;
     }

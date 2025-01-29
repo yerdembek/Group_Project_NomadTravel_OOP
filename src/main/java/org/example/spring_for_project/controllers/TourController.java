@@ -30,17 +30,28 @@ public class TourController {
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
-    // Получить все туры
-
     @GetMapping
     public List<Tour> getAllTours() {
         return tourRepository.findAll();
     }
-    // Получить тур по ID
 
     @GetMapping("/{id}")
     public Tour getTourById(@PathVariable Long id) {
         return tourRepository.findById(id).orElseThrow(() -> new RuntimeException("Тур не найден!"));
+    }
+
+    @GetMapping("/filter/category")
+    public List<Tour> getToursByCategory(@RequestParam String category) {
+        return tourRepository.findByCategory(category);
+    }
+
+    @GetMapping("/filter/duration")
+    public List<Tour> getToursByDurationRange(
+            @RequestParam String minDuration,
+            @RequestParam String maxDuration) {
+        Duration min = Duration.parse(minDuration);
+        Duration max = Duration.parse(maxDuration);
+        return tourRepository.findByDurationBetween(min, max);
     }
 
     @GetMapping("/filter")
@@ -53,31 +64,24 @@ public class TourController {
         return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDuration, maxDuration);
     }
 
-    // Добавить новый тур
     @PostMapping
     public Tour createTour(@RequestBody Tour tour) {
         return tourRepository.save(tour);
     }
 
-    // Удалить тур
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTour(@PathVariable Long id) {
-        // Проверяем, существует ли тур
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Тур с ID " + id + " не найден!"));
 
-        // Проверяем наличие связанных заказов
         List<Order> relatedOrders = orderRepository.findByTour_Id(id);
         if (!relatedOrders.isEmpty()) {
             return ResponseEntity.badRequest().body("Тур связан с заказами и не может быть удалён.");
         }
 
-        // Если зависимостей нет, удаляем тур
         tourRepository.deleteById(id);
         return ResponseEntity.ok("Тур с ID " + id + " успешно удалён.");
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Tour> updateTour(@PathVariable Long id, @RequestBody Tour updatedTour) {

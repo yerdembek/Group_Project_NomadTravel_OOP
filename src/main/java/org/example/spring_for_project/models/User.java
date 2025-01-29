@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "users") // Имя таблицы в базе данных
+@Table(name = "users")
 public class User {
 
     @Id
@@ -22,18 +22,16 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
-    private String role; // Роль пользователя (например, "admin", "user")
+    private String role;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders; // Связь с заказами
+    private List<Order> orders;
 
-    // Конструктор без параметров
     public User() {}
 
-    // Конструктор со всеми параметрами
     public User(Long id, String name, String email, String phone, String role, LocalDateTime createdAt, List<Order> orders) {
         this.id = id;
         this.name = name;
@@ -44,7 +42,6 @@ public class User {
         this.orders = orders;
     }
 
-    // Геттеры и сеттеры
 
     public Long getId() {
         return id;
