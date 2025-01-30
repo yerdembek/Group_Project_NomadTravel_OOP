@@ -1,7 +1,6 @@
 package org.example.spring_for_project.repositories.interfaces;
 
 import org.example.spring_for_project.models.Tour;
-import org.example.spring_for_project.repositories.custom.CustomTourRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 
-public interface ITourRepository extends JpaRepository<Tour, Long>, CustomTourRepository {
+public interface ITourRepository extends JpaRepository<Tour, Long> {
 
     List<Tour> findByCategory(String category);
 
@@ -31,4 +30,7 @@ public interface ITourRepository extends JpaRepository<Tour, Long>, CustomTourRe
             @Param("minDuration") Duration minDuration,
             @Param("maxDuration") Duration maxDuration
     );
+
+    @Query("SELECT t FROM Tour t WHERE t.price > :minPrice")
+    List<Tour> findToursByPriceAfter(@Param("minPrice") BigDecimal minPrice);
 }

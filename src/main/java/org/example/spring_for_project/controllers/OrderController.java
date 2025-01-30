@@ -1,5 +1,6 @@
 package org.example.spring_for_project.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.repositories.interfaces.IOrderRepository;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
     private final IOrderRepository orderRepository;
-
-    public OrderController(IOrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
 
     @GetMapping
     public List<Order> getAllOrders() {

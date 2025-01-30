@@ -1,5 +1,6 @@
 package org.example.spring_for_project.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.User;
 import org.example.spring_for_project.repositories.interfaces.IUserRepository;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final IUserRepository userRepository;
-
-    public UserController(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @GetMapping
     public List<User> getAllUsers() {

@@ -1,11 +1,11 @@
 package org.example.spring_for_project.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.controllers.interfaces.ITourController;
 import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.models.Tour;
 import org.example.spring_for_project.repositories.interfaces.IOrderRepository;
 import org.example.spring_for_project.repositories.interfaces.ITourRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/tours")
+@RequiredArgsConstructor
 public class TourController implements ITourController {
 
-    @Autowired
-    private ITourRepository tourRepository;
-
-    @Autowired
-    private IOrderRepository orderRepository;
+    private final ITourRepository tourRepository;
+    private final IOrderRepository orderRepository;
 
     @GetMapping
     @Override
@@ -52,25 +50,17 @@ public class TourController implements ITourController {
         return tourRepository.findByDurationBetween(min, max);
     }
 
-    @Override
-    public List<Tour> getFilteredTours(String category, BigDecimal minPrice, BigDecimal maxPrice, Duration minDuration, Duration maxDuration) {
-        return List.of();
-    }
-
     @GetMapping("/filter")
-    public List<Tour> filterTours(
+    @Override
+    public List<Tour> getFilteredTours(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String minDuration,
-            @RequestParam(required = false) String maxDuration
+            @RequestParam(required = false) Duration minDuration,
+            @RequestParam(required = false) Duration maxDuration
     ) {
-        // Преобразуем строки в объекты Duration
-        Duration minDur = (minDuration != null) ? Duration.parse(minDuration) : null;
-        Duration maxDur = (maxDuration != null) ? Duration.parse(maxDuration) : null;
 
-        // Вызываем метод репозитория
-        return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDur, maxDur);
+        return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDuration, maxDuration);
     }
 
 

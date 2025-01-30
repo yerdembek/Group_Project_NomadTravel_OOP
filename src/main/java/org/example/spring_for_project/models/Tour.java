@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tours")
@@ -47,6 +45,7 @@ public class Tour {
     @CollectionTable(name = "tour_images", joinColumns = @JoinColumn(name = "tour_id"))
     @Column(name = "image_url") // Таблица для хранения URL изображений
     private List<String> images;
+
 
     public Tour() {
 
