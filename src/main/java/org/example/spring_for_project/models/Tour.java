@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "tours") // Указание имени таблицы
+@Table(name = "tours")
 public class Tour {
 
     @Id
@@ -17,7 +17,7 @@ public class Tour {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 500) // Описание с ограничением длины
+    @Column(nullable = false, length = 500)
     private String description;
 
     @Column(nullable = false)
@@ -36,15 +36,16 @@ public class Tour {
     private Integer maxParticipants;
 
     @Column(nullable = false)
-    private Duration duration; // Длительность тура
+    private Duration duration;
 
     @Column
-    private String category; // Категория тура
+    private String category;
 
     @ElementCollection
     @CollectionTable(name = "tour_images", joinColumns = @JoinColumn(name = "tour_id"))
     @Column(name = "image_url") // Таблица для хранения URL изображений
     private List<String> images;
+
 
     public Tour() {
 
@@ -71,7 +72,6 @@ public class Tour {
         this.maxParticipants = maxParticipants;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -177,5 +177,4 @@ public class Tour {
                 ", images=" + images +
                 '}';
     }
-
 }

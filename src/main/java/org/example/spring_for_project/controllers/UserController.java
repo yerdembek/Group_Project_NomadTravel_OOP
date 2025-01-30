@@ -1,21 +1,19 @@
 package org.example.spring_for_project.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.User;
-import org.example.spring_for_project.repositories.UserRepository;
+import org.example.spring_for_project.repositories.interfaces.IUserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
-
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final IUserRepository userRepository;
 
     @GetMapping
     public List<User> getAllUsers() {
