@@ -1,5 +1,8 @@
 package org.example.spring_for_project.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.example.spring_for_project.enums.PaymentStatus;
 
@@ -16,10 +19,12 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonManagedReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "tour_id", nullable = false)
+    @JsonIgnoreProperties({"description", "images", "location", "maxParticipants", "duration"})
     private Tour tour;
 
     @Column(nullable = false)
