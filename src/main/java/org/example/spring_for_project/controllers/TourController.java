@@ -1,110 +1,84 @@
 package org.example.spring_for_project.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.spring_for_project.controllers.interfaces.ITourController;
-import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.models.Tour;
-import org.example.spring_for_project.repositories.interfaces.IOrderRepository;
-import org.example.spring_for_project.repositories.interfaces.ITourRepository;
+import org.example.spring_for_project.services.TourService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 @RestController
 @RequestMapping("/api/tours")
 @RequiredArgsConstructor
-public class TourController implements ITourController {
+public class TourController {
 
-    private final ITourRepository tourRepository;
-    private final IOrderRepository orderRepository;
+    private final TourService tourService;
 
     @GetMapping
-    @Override
     public List<Tour> getAllTours() {
-        return tourRepository.findAll();
+        return tourService.getAllTours();
     }
 
     @GetMapping("/{id}")
-    @Override
-    public Tour getTourById(@PathVariable Long id) {
-        return tourRepository.findById(id).orElseThrow(() -> new RuntimeException("Тур не найден!"));
+    public ResponseEntity<Tour> getTourById(@PathVariable Long id) {
+        return tourService.getTourById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/filter/category")
-    @Override
     public List<Tour> getToursByCategory(@RequestParam String category) {
-        return tourRepository.findByCategory(category);
+        return tourService.getToursByCategory(category);
     }
 
     @GetMapping("/filter/duration")
-    @Override
     public List<Tour> getToursByDurationRange(
             @RequestParam String minDuration,
-            @RequestParam String maxDuration) {
+            @RequestParam String maxDuration
+    ) {
         Duration min = Duration.parse(minDuration);
         Duration max = Duration.parse(maxDuration);
-        return tourRepository.findByDurationBetween(min, max);
+        return tourService.getToursByDurationRange(min, max);
     }
 
     @GetMapping("/filter")
-    @Override
     public List<Tour> getFilteredTours(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) Duration minDuration,
-            @RequestParam(required = false) Duration maxDuration
+            @RequestParam(required = false) String minDuration,
+            @RequestParam(required = false) String maxDuration
     ) {
-
-        return tourRepository.findFilteredTours(category, minPrice, maxPrice, minDuration, maxDuration);
+        Duration min = (minDuration != null) ? Duration.parse(minDuration) : null;
+        Duration max = (maxDuration != null) ? Duration.parse(maxDuration) : null;
+        return tourService.getFilteredTours(category, minPrice, maxPrice, min, max);
     }
 
-
     @PostMapping
-    @Override
     public Tour createTour(@RequestBody Tour tour) {
-        return tourRepository.save(tour);
+        return tourService.createTour(tour);
     }
 
     @DeleteMapping("/{id}")
-    @Override
     public ResponseEntity<String> deleteTour(@PathVariable Long id) {
-        Tour tour = tourRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Тур с ID " + id + " не найден!"));
-
-        List<Order> relatedOrders = orderRepository.findByTour_Id(id);
-        if (!relatedOrders.isEmpty()) {
-            return ResponseEntity.badRequest().body("Тур связан с заказами и не может быть удалён.");
+        try {
+            tourService.deleteTour(id);
+            return ResponseEntity.ok("Tour with ID " + id + " has been successfully deleted.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        tourRepository.deleteById(id);
-        return ResponseEntity.ok("Тур с ID " + id + " успешно удалён.");
     }
 
     @PutMapping("/{id}")
-    @Override
     public ResponseEntity<Tour> updateTour(@PathVariable Long id, @RequestBody Tour updatedTour) {
-        return tourRepository.findById(id)
-                .map(existingTour -> {
-                    existingTour.setName(updatedTour.getName());
-                    existingTour.setDescription(updatedTour.getDescription());
-                    existingTour.setPrice(updatedTour.getPrice());
-                    existingTour.setStartDate(updatedTour.getStartDate());
-                    existingTour.setEndDate(updatedTour.getEndDate());
-                    existingTour.setLocation(updatedTour.getLocation());
-                    existingTour.setMaxParticipants(updatedTour.getMaxParticipants());
-                    if (updatedTour.getDuration() != null) {
-                        existingTour.setDuration(updatedTour.getDuration());
-                    }
-                    existingTour.setCategory(updatedTour.getCategory());
-                    existingTour.setImages(updatedTour.getImages());
-                    tourRepository.save(existingTour);
-                    return ResponseEntity.ok(existingTour);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            Tour tour = tourService.updateTour(id, updatedTour);
+            return ResponseEntity.ok(tour);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
