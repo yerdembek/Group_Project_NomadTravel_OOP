@@ -1,6 +1,7 @@
 package org.example.spring_for_project.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.spring_for_project.enums.PaymentStatus;
 import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.services.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -55,4 +56,17 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PatchMapping("/{id}/payment-status")
+    public ResponseEntity<String> updatePaymentStatus(
+            @PathVariable Long id,
+            @RequestParam PaymentStatus newStatus) {
+        try {
+            orderService.updatePaymentStatus(id, newStatus);
+            return ResponseEntity.ok("Payment status updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
