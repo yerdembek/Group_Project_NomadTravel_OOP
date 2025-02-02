@@ -2,7 +2,7 @@ package org.example.spring_for_project.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.User;
-import org.example.spring_for_project.repositories.interfaces.IUserRepository;
+import org.example.spring_for_project.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,43 +14,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final IUserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
+        return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use.");
+        try {
+            user.setCreatedAt(LocalDateTime.now());
+            User savedUser = userService.registerUser(user);
+            return ResponseEntity.ok("User registered successfully with ID: " + savedUser.getId());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        if (user.getName() == null || user.getName().isEmpty() || user.getEmail() == null || user.getEmail().isEmpty()) {
-            return ResponseEntity.badRequest().body("Error: Name and Email are required.");
-        }
-
-        user.setCreatedAt(LocalDateTime.now());
-
-        User savedUser = userRepository.save(user);
-
-        return ResponseEntity.ok("User registered successfully with ID: " + savedUser.getId());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
+        try {
+            userService.deleteUser(id);
             return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 }
