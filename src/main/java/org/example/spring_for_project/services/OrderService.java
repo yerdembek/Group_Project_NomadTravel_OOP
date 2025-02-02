@@ -57,4 +57,14 @@ public class OrderService implements OrderServiceInterface {
         }
         orderRepository.deleteById(id);
     }
+
+    @Override
+    public void updatePaymentStatus(Long orderId, PaymentStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderId + " not found"));
+
+        order.setPaymentStatus(newStatus);
+        orderRepository.save(order);
+    }
+
 }

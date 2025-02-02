@@ -1,5 +1,6 @@
 package org.example.spring_for_project.services.interfaces;
 
+import org.example.spring_for_project.enums.PaymentStatus;
 import org.example.spring_for_project.models.Order;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface OrderServiceInterface {
     Order createOrder(Order order);
 
     void deleteOrder(Long id);
+
+    void updatePaymentStatus(Long orderId, PaymentStatus newStatus);
 }
