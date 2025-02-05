@@ -2,9 +2,12 @@ package org.example.spring_for_project.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.Tour;
+import org.example.spring_for_project.repositories.interfaces.ITourRepository;
 import org.example.spring_for_project.services.TourService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -56,6 +59,8 @@ public class TourController {
         Duration max = (maxDuration != null) ? Duration.parse(maxDuration) : null;
         return tourService.getFilteredTours(category, minPrice, maxPrice, min, max);
     }
+
+
 
     @PostMapping
     public Tour createTour(@RequestBody Tour tour) {
