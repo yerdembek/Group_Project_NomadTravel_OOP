@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
-public class ViewUserController {
+public class UserViewController {
 
     private final UserService userService;
 

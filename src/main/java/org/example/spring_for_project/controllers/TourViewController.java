@@ -1,43 +1,58 @@
 package org.example.spring_for_project.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.Tour;
-import org.example.spring_for_project.repositories.interfaces.ITourRepository;
 import org.example.spring_for_project.services.TourService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class TourViewController {
 
-    private final ITourRepository tourRepository;
-
-    public TourViewController(ITourRepository tourRepository) {
-        this.tourRepository = tourRepository;
-    }
+    private final TourService tourService;
 
     @GetMapping("/tours")
-    public String showTours(Model model) {
-        List<Tour> tours = tourRepository.findAll();
+    public String getAllTours(Model model) {
+        List<Tour> tours = tourService.getAllTours();
         model.addAttribute("tours", tours);
-        return "tour-list"; // Ссылается на "tour-list.html"
+        return "tour-list";
     }
 
     @GetMapping("/tours/{id}")
-    public String showTourDetails(@PathVariable Long id, Model model) {
-        Tour tour = tourRepository.findById(id).orElseThrow(() -> new RuntimeException("Tour not found"));
-        model.addAttribute("tour", tour);
+    public String getTourDetails(@PathVariable Long id, Model model) {
+        tourService.getTourById(id).ifPresentOrElse(
+                tour -> model.addAttribute("tour", tour),
+                () -> model.addAttribute("error", "Tour with ID " + id + " not found.")
+        );
         return "tour-details";
     }
 
-    @GetMapping("/catalogue")
-    public String showTourCatalogue(Model model) {
-        List<Tour> tours = TourService.getAllTours();
-        model.addAttribute("tours", tours);
-        return "tour-list"; // Название шаблона Thymeleaf
+
+    @GetMapping("/tours/filter")
+    public String getFilteredTours(
+            @RequestParam(required = false) String category,
+            Model model
+    ) {
+        List<Tour> filteredTours = tourService.getToursByCategory(category);
+        model.addAttribute("tours", filteredTours);
+        return "tour-list";
     }
+
+    @GetMapping("/tours/{id}/book")
+    public String getBookingPage(@PathVariable Long id, Model model) {
+        return tourService.getTourById(id)
+                .map(tour -> {
+                    model.addAttribute("tour", tour);
+                    return "tour-booking";
+                })
+                .orElse("redirect:/tours?error=Tour+not+found");
+    }
+
 
 }

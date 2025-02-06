@@ -41,17 +41,12 @@
                 <p class="fw-bold text-dark">Price: <span th:text="${tour.price}"></span> KZT</p>
                 <div class="d-flex justify-content-between">
                     <a th:href="@{'/tours/' + ${tour.id}}" class="btn btn-outline-primary">Read More</a>
-                    <button class="btn btn-outline-success" onclick="bookTour()">Book</button>
+                    <a th:href="@{'/tours/' + ${tour.id} + '/book'}" class="btn btn-outline-success">Book</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    function bookTour() {
-        alert("The booking function will be coming soon!");
-    }
-</script>
 </body>
 </html>

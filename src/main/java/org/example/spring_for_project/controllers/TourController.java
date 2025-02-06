@@ -86,4 +86,15 @@ public class TourController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{id}/book")
+    public ResponseEntity<String> bookTour(@PathVariable Long id) {
+        try {
+            tourService.bookTour(id);
+            return ResponseEntity.ok("Tour with ID " + id + " successfully booked!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
