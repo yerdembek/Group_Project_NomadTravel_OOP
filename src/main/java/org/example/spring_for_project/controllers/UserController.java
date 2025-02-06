@@ -5,6 +5,7 @@ import org.example.spring_for_project.models.User;
 import org.example.spring_for_project.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,15 +30,18 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         try {
             user.setCreatedAt(LocalDateTime.now());
             User savedUser = userService.registerUser(user);
-            return ResponseEntity.ok("User registered successfully with ID: " + savedUser.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "Пользователь зарегистрирован с ID: " + savedUser.getId());
+            return "redirect:/users"; // Перенаправление на страницу списка пользователей
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/register"; // Перенаправление обратно на регистрацию в случае ошибки
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

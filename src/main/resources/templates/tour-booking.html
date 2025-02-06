@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Tour</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            max-width: 600px;
+            margin: 50px auto;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="container mt-5">
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title text-center" th:text="'Booking: ' + ${tour.name}"></h2>
+        <p><strong>Price:</strong> <span th:text="${tour.price}"></span> KZT</p>
+        <p><strong>Available spots:</strong> <span th:text="${tour.maxParticipants}"></span></p>
+
+        <form th:action="@{'/api/tours/' + ${tour.id} + '/book'}" method="post">
+            <button type="submit" class="btn btn-success w-100">Confirm Booking</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

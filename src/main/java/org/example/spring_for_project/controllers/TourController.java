@@ -2,9 +2,12 @@ package org.example.spring_for_project.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.Tour;
+import org.example.spring_for_project.repositories.interfaces.ITourRepository;
 import org.example.spring_for_project.services.TourService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -57,6 +60,8 @@ public class TourController {
         return tourService.getFilteredTours(category, minPrice, maxPrice, min, max);
     }
 
+
+
     @PostMapping
     public Tour createTour(@RequestBody Tour tour) {
         return tourService.createTour(tour);
@@ -81,4 +86,15 @@ public class TourController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{id}/book")
+    public ResponseEntity<String> bookTour(@PathVariable Long id) {
+        try {
+            tourService.bookTour(id);
+            return ResponseEntity.ok("Tour with ID " + id + " successfully booked!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

@@ -74,4 +74,17 @@ public class TourService implements TourServiceInterface {
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Tour with ID " + id + " not found"));
     }
+
+    public Tour bookTour(Long id) {
+        Tour tour = tourRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tour with ID " + id + " not found"));
+
+        if (tour.getMaxParticipants() <= 0) {
+            throw new IllegalStateException("No available spots for this tour.");
+        }
+
+        tour.setMaxParticipants(tour.getMaxParticipants() - 1);
+
+        return tourRepository.save(tour);
+    }
 }
