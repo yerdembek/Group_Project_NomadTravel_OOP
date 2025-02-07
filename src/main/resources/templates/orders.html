@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Orders</title>
-    <link rel="stylesheet" th:href="@{/styles.css}" />
-</head>
+<head th:replace="fragments/header.html :: head"></head>
 <body>
-<h1>Orders</h1>
-<table>
-    <tr>
-        <th>Tour Name</th>
-        <th>User Name</th>
-        <th>Status</th>
-        <th>Total Price</th>
-        <th>Actions</th>
-    </tr>
-    <tr th:each="order : ${orders}">
-        <td th:text="${order.tour.name}">Tour Name</td>
-        <td th:text="${order.user.name}">User Name</td>
-        <td th:text="${order.paymentStatus}">Status</td>
-        <td th:text="${order.totalPrice}">Total Price</td>
-        <td>
-            <a th:href="@{/orders/{id}(id=${order.id})}">
-                <button>View</button>
-            </a>
-        </td>
-    </tr>
-</table>
+<div class="container mt-5">
+    <h2>Мои бронирования</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Тур</th>
+            <th>Дата</th>
+            <th>Мест</th>
+            <th>Цена</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.tour.name}"></td>
+            <td th:text="${order.orderDate}"></td>
+            <td th:text="${order.seatsBooked}"></td>
+            <td th:text="${order.totalPrice} + ' KZT'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

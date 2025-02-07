@@ -3,17 +3,32 @@ package org.example.spring_for_project.services;
 import org.example.spring_for_project.models.User;
 import org.example.spring_for_project.repositories.interfaces.IUserRepository;
 import org.example.spring_for_project.services.interfaces.UserServiceInterface;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService implements UserServiceInterface {
     private final IUserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService(IUserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь с таким email не найден"));
+
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Неверный пароль");
+        }
+
+        return user;
     }
 
     @Override
@@ -27,11 +42,26 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
+    @Transactional
     public User registerUser(User user) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            log.error("Email пустой");
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
         if (userRepository.existsByEmail(user.getEmail())) {
+            log.error("Email уже существует: {}", user.getEmail());
             throw new IllegalArgumentException("Email is already in use");
         }
-        return userRepository.save(user);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("An account with this email already exists");
+        }
+
+        user.setCreatedAt(LocalDateTime.now());
+
+        User savedUser = userRepository.save(user);
+
+        log.info("Пользователь сохранён в базу с ID: {}", savedUser.getId());
+        return savedUser;
     }
 
     @Override

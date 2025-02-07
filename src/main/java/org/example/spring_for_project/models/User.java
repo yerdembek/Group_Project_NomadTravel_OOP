@@ -29,6 +29,9 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private String password;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Order> orders;
@@ -36,6 +39,14 @@ public class User {
 
 
     public User() {}
+
+    public User(String name, String email, String phone, String role) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+        this.createdAt = LocalDateTime.now();
+    }
 
     public User(Long id, String name, String email, String phone, String role, LocalDateTime createdAt, List<Order> orders) {
         this.id = id;
@@ -103,6 +114,10 @@ public class User {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
 
     @Override
     public String toString() {

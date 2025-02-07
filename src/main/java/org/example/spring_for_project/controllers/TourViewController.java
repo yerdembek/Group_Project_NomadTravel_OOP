@@ -21,14 +21,14 @@ public class TourViewController {
     public String getAllTours(Model model) {
         List<Tour> tours = tourService.getAllTours();
         model.addAttribute("tours", tours);
-        return "tour-list";
+        return "tours";
     }
 
     @GetMapping("/tours/{id}")
     public String getTourDetails(@PathVariable Long id, Model model) {
         tourService.getTourById(id).ifPresentOrElse(
                 tour -> model.addAttribute("tour", tour),
-                () -> model.addAttribute("error", "Tour with ID " + id + " not found.")
+                () -> model.addAttribute("error", "Тур не найден!")
         );
         return "tour-details";
     }

@@ -1,5 +1,6 @@
 package org.example.spring_for_project.controllers;
 
+import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.Tour;
 import org.example.spring_for_project.repositories.interfaces.ITourRepository;
@@ -7,6 +8,7 @@ import org.example.spring_for_project.services.TourService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.math.BigDecimal;
@@ -88,13 +90,33 @@ public class TourController {
     }
 
     @PostMapping("/{id}/book")
-    public ResponseEntity<String> bookTour(@PathVariable Long id) {
+    public ResponseEntity<?> bookTour(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "1") int seats) {
         try {
-            tourService.bookTour(id);
-            return ResponseEntity.ok("Tour with ID " + id + " successfully booked!");
+            tourService.bookTour(id, seats);
+            return ResponseEntity.ok("Тур успешно забронирован!");
         } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @PostMapping("/tours/{id}/book")
+    public String bookTour(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "1") int seats,
+            RedirectAttributes redirectAttributes) {
+        try {
+            tourService.bookTour(id, seats);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Тур успешно забронирован!");
+            return "redirect:/booking-success";
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/tours";
+        }
+    }
+
+
 
 }

@@ -32,8 +32,7 @@
         <td th:text="${user.id}"></td>
         <td th:text="${user.email}"></td>
         <td>
-            <form th:action="@{/api/users/{id}(id=${user.id})}" method="post">
-                <input type="hidden" name="_method" value="delete"/>
+            <form th:action="@{/delete/{id}(id=${user.id})}" method="post">
                 <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
             </form>
         </td>
