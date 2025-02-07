@@ -1,21 +1,30 @@
 package org.example.spring_for_project.services;
 
+import org.example.spring_for_project.enums.PaymentStatus;
+import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.models.Tour;
+import org.example.spring_for_project.models.User;
+import org.example.spring_for_project.repositories.interfaces.IOrderRepository;
 import org.example.spring_for_project.repositories.interfaces.ITourRepository;
 import org.example.spring_for_project.services.interfaces.TourServiceInterface;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TourService implements TourServiceInterface {
     private final ITourRepository tourRepository;
+    private final IOrderRepository orderRepository;
+    private final SessionService sessionService;
 
-    public TourService(ITourRepository tourRepository) {
+    public TourService(ITourRepository tourRepository, IOrderRepository orderRepository, SessionService sessionService) {
         this.tourRepository = tourRepository;
+        this.orderRepository = orderRepository;
+        this.sessionService = sessionService;
     }
 
     @Override
@@ -73,5 +82,35 @@ public class TourService implements TourServiceInterface {
                     return tourRepository.save(existingTour);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Tour with ID " + id + " not found"));
+    }
+
+    public void bookTour(Long tourId, int seats) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new IllegalArgumentException("Тур с ID " + tourId + " не найден"));
+
+        if (tour.getMaxParticipants() < seats) {
+            throw new IllegalStateException("Недостаточно мест для бронирования");
+        }
+
+        tour.setMaxParticipants(tour.getMaxParticipants() - seats);
+        tourRepository.save(tour);
+
+        User currentUser = sessionService.getCurrentUser();
+        if (currentUser == null) {
+            throw new IllegalStateException("Пользователь не авторизован");
+        }
+        Order order = new Order();
+        order.setUser(currentUser);
+        order.setTour(tour);
+        order.setSeatsBooked(seats);
+        order.setTotalPrice(tour.getPrice().multiply(BigDecimal.valueOf(seats)));
+        order.setOrderDate(LocalDateTime.now());
+        order.setPaymentStatus(PaymentStatus.PENDING);
+
+        orderRepository.save(order);
+    }
+
+    public List<Tour> getPopularTours() {
+        return tourRepository.findTop3ByOrderByPriceDesc(); // Пример, можно менять логику
     }
 }

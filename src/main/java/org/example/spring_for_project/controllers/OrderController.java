@@ -3,10 +3,16 @@ package org.example.spring_for_project.controllers;
 import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.enums.PaymentStatus;
 import org.example.spring_for_project.models.Order;
+import org.example.spring_for_project.models.Tour;
+import org.example.spring_for_project.models.User;
 import org.example.spring_for_project.services.OrderService;
+import org.example.spring_for_project.services.SessionService;
+import org.example.spring_for_project.services.TourService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -14,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    private final TourService tourService;
+    private final SessionService sessionService;
 
     @GetMapping
     public List<Order> getAllOrders() {
@@ -69,4 +77,31 @@ public class OrderController {
         }
     }
 
+    @PostMapping("/book/{tourId}")
+    public ResponseEntity<String> bookTour(@PathVariable Long tourId, @RequestParam Integer seats) {
+        User currentUser = sessionService.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("Please register before booking a tour");
+        }
+
+        Tour tour = tourService.getTourById(tourId)
+                .orElseThrow(() -> new IllegalArgumentException("Tour not found"));
+
+        if (tour.getMaxParticipants() < seats) {
+            return ResponseEntity.badRequest().body("Not enough available spots");
+        }
+
+        Order order = new Order();
+        order.setUser(currentUser);
+        order.setTour(tour);
+        order.setSeatsBooked(seats);
+        order.setTotalPrice(tour.getPrice().multiply(BigDecimal.valueOf(seats)));
+        order.setPaymentStatus(PaymentStatus.PENDING);
+        order.setOrderDate(LocalDateTime.now());
+
+        orderService.createOrder(order);
+
+        return ResponseEntity.ok("Tour booked successfully for " + currentUser.getName());
+
+    }
 }

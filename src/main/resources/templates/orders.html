@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header.html :: head"></head>
+<body>
+<div class="container mt-5">
+    <h2>Мои бронирования</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Тур</th>
+            <th>Дата</th>
+            <th>Мест</th>
+            <th>Цена</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.tour.name}"></td>
+            <td th:text="${order.orderDate}"></td>
+            <td th:text="${order.seatsBooked}"></td>
+            <td th:text="${order.totalPrice} + ' KZT'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

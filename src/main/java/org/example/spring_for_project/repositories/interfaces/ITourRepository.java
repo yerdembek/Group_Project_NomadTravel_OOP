@@ -33,4 +33,6 @@ public interface ITourRepository extends JpaRepository<Tour, Long> {
 
     @Query("SELECT t FROM Tour t WHERE t.price > :minPrice")
     List<Tour> findToursByPriceAfter(@Param("minPrice") BigDecimal minPrice);
+
+        List<Tour> findTop3ByOrderByPriceDesc(); // 3 самых дорогих тура
 }

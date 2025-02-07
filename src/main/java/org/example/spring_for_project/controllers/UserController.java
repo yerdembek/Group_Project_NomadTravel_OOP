@@ -5,6 +5,9 @@ import org.example.spring_for_project.models.User;
 import org.example.spring_for_project.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import org.example.spring_for_project.services.SessionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,9 +15,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
+    private final SessionService sessionService;
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -29,15 +34,44 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
+            log.info("Попытка регистрации пользователя с email: {}", user.getEmail());
+
             user.setCreatedAt(LocalDateTime.now());
+
             User savedUser = userService.registerUser(user);
-            return ResponseEntity.ok("User registered successfully with ID: " + savedUser.getId());
+
+            sessionService.setCurrentUser(savedUser);
+
+            log.info("Пользователь успешно зарегистрирован с ID: {}", savedUser.getId());
+            return ResponseEntity.ok().body(savedUser);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            log.error("Ошибка при регистрации пользователя: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            log.error("Неожиданная ошибка: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().body("{\"error\": \"Неожиданная ошибка сервера\"}");
         }
     }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutUser() {
+        sessionService.logout();
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser() {
+        User currentUser = sessionService.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body(null);
+        }
+        return ResponseEntity.ok(currentUser);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -48,4 +82,6 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }

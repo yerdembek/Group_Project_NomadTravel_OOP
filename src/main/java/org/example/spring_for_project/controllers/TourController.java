@@ -1,10 +1,15 @@
 package org.example.spring_for_project.controllers;
 
+import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.models.Tour;
+import org.example.spring_for_project.repositories.interfaces.ITourRepository;
 import org.example.spring_for_project.services.TourService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -57,6 +62,8 @@ public class TourController {
         return tourService.getFilteredTours(category, minPrice, maxPrice, min, max);
     }
 
+
+
     @PostMapping
     public Tour createTour(@RequestBody Tour tour) {
         return tourService.createTour(tour);
@@ -81,4 +88,35 @@ public class TourController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{id}/book")
+    public ResponseEntity<?> bookTour(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "1") int seats) {
+        try {
+            tourService.bookTour(id, seats);
+            return ResponseEntity.ok("Тур успешно забронирован!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/tours/{id}/book")
+    public String bookTour(
+            @PathVariable Long id,
+            @RequestParam(required = false, defaultValue = "1") int seats,
+            RedirectAttributes redirectAttributes) {
+        try {
+            tourService.bookTour(id, seats);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Тур успешно забронирован!");
+            return "redirect:/booking-success";
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/tours";
+        }
+    }
+
+
+
 }
