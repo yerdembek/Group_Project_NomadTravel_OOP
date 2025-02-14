@@ -34,7 +34,7 @@ public class UserViewController {
 
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login"; // Имя шаблона страницы входа
+        return "login";
     }
 
     @PostMapping("/login")
@@ -46,7 +46,7 @@ public class UserViewController {
         try {
             User user = userService.authenticate(email, password);
             sessionService.setCurrentUser(user);
-            redirectAttributes.addFlashAttribute("successMessage", "Вы успешно вошли!");
+            redirectAttributes.addFlashAttribute("successMessage", "You have successfully logged in!");
             return "redirect:/tours";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -96,9 +96,9 @@ public class UserViewController {
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             userService.deleteUser(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Пользователь успешно удалён!");
+            redirectAttributes.addFlashAttribute("successMessage", "User successfully deleted!");
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Пользователь с ID " + id + " не найден.");
+            redirectAttributes.addFlashAttribute("errorMessage", "User ID " + id + " not found.");
         }
         return "redirect:/users";
     }

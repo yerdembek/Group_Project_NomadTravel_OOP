@@ -1,5 +1,6 @@
 package org.example.spring_for_project.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.spring_for_project.enums.PaymentStatus;
 import org.example.spring_for_project.models.Order;
 import org.example.spring_for_project.models.Tour;
@@ -16,16 +17,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TourService implements TourServiceInterface {
     private final ITourRepository tourRepository;
     private final IOrderRepository orderRepository;
     private final SessionService sessionService;
 
-    public TourService(ITourRepository tourRepository, IOrderRepository orderRepository, SessionService sessionService) {
-        this.tourRepository = tourRepository;
-        this.orderRepository = orderRepository;
-        this.sessionService = sessionService;
-    }
+//    public TourService(ITourRepository tourRepository, IOrderRepository orderRepository, SessionService sessionService) {
+//        this.tourRepository = tourRepository;
+//        this.orderRepository = orderRepository;
+//        this.sessionService = sessionService;
+//    }
 
     @Override
     public List<Tour> getAllTours() {
@@ -86,10 +88,10 @@ public class TourService implements TourServiceInterface {
 
     public void bookTour(Long tourId, int seats) {
         Tour tour = tourRepository.findById(tourId)
-                .orElseThrow(() -> new IllegalArgumentException("Тур с ID " + tourId + " не найден"));
+                .orElseThrow(() -> new IllegalArgumentException("Tour with ID " + tourId + " not found"));
 
         if (tour.getMaxParticipants() < seats) {
-            throw new IllegalStateException("Недостаточно мест для бронирования");
+            throw new IllegalStateException("Not enough reservations");
         }
 
         tour.setMaxParticipants(tour.getMaxParticipants() - seats);
@@ -97,7 +99,7 @@ public class TourService implements TourServiceInterface {
 
         User currentUser = sessionService.getCurrentUser();
         if (currentUser == null) {
-            throw new IllegalStateException("Пользователь не авторизован");
+            throw new IllegalStateException("User not authorized");
         }
         Order order = new Order();
         order.setUser(currentUser);
@@ -111,6 +113,6 @@ public class TourService implements TourServiceInterface {
     }
 
     public List<Tour> getPopularTours() {
-        return tourRepository.findTop3ByOrderByPriceDesc(); // Пример, можно менять логику
+        return tourRepository.findTop3ByOrderByPriceDesc();
     }
 }

@@ -28,7 +28,6 @@
 <body class="container mt-5">
 
 <div class="card" th:if="${tour != null}">
-    <!-- Bootstrap Carousel -->
     <div id="tourImagesCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div th:each="image, iterStat : ${tour.images}"
@@ -51,7 +50,6 @@
         </button>
     </div>
 
-    <!-- Tour details -->
     <div class="card-body">
         <h1 class="card-title" th:text="${tour.name}"></h1>
         <p class="card-text text-muted" th:text="${tour.description}"></p>
@@ -61,7 +59,6 @@
         <p><strong>Category:</strong> <span th:text="${tour.category}"></span></p>
         <p><strong>Available spots:</strong> <span th:text="${tour.maxParticipants}"></span></p>
 
-        <!-- Additional information -->
         <div class="mt-4">
             <h4>What is included in the tour?</h4>
             <ul>

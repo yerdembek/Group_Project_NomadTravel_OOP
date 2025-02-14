@@ -16,13 +16,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/tours">Туры</a>
+                    <a class="nav-link" href="/tours">Tours</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/register">Регистрация</a>
+                    <a class="nav-link" href="/register">Registration</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/my-orders">Мои заказы</a>
+                    <a class="nav-link" href="/my-orders">My orders</a>
                 </li>
             </ul>
         </div>
@@ -34,53 +34,51 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header text-center bg-primary text-white">
-                    <h3>Регистрация</h3>
+                    <h3>Registration</h3>
                 </div>
                 <div class="card-body">
 
-                    <!-- Сообщение об ошибке -->
                     <div th:if="${errorMessage}" class="alert alert-danger">
                         <p th:text="${errorMessage}"></p>
                     </div>
 
-                    <!-- Сообщение об успешной регистрации -->
                     <div th:if="${successMessage}" class="alert alert-success">
                         <p th:text="${successMessage}"></p>
                     </div>
 
                     <form action="/register" method="post" class="needs-validation" novalidate>
                         <div class="mb-3">
-                            <label for="name" class="form-label">Имя</label>
+                            <label for="name" class="form-label">Name</label>
                             <input type="text" name="name" id="name" class="form-control" required>
                             <div class="invalid-feedback">
-                                Пожалуйста, введите имя.
+                                Please enter a name.
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" name="email" id="email" class="form-control" required>
                             <div class="invalid-feedback">
-                                Пожалуйста, введите действительный email.
+                                Please enter a valid email.
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Телефон</label>
+                            <label for="phone" class="form-label">Phone number</label>
                             <input type="text" name="phone" id="phone" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label for="role" class="form-label">Роль</label>
+                            <label for="role" class="form-label">Role</label>
                             <select name="role" id="role" class="form-select">
-                                <option value="USER" selected>Пользователь</option>
-                                <option value="ADMIN">Админ</option>
+                                <option value="USER" selected>User</option>
+                                <option value="ADMIN">Admin</option>
                             </select>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                            <button type="submit" class="btn btn-primary">Sign up</button>
                         </div>
                     </form>
                 </div>
                 <div class="card-footer text-center">
-                    Уже зарегистрированы? <a href="/login" class="text-decoration-none">Войти</a>
+                    Already registered? <a href="/login" class="text-decoration-none">Sign in</a>
                 </div>
             </div>
         </div>
@@ -88,12 +86,11 @@
 </div>
 
 <footer class="text-center mt-5">
-    <p>© 2025 Nomad Travel. Все права защищены.</p>
+    <p>© 2025 Nomad Travel. All rights reserved.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Bootstrap валидация формы
     (function () {
         'use strict';
         const forms = document.querySelectorAll('.needs-validation');

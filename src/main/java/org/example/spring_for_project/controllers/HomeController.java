@@ -22,6 +22,6 @@ public class HomeController {
     public String homePage(Model model) {
         List<Tour> popularTours = tourService.getPopularTours();
         model.addAttribute("popularTours", popularTours);
-        return "index"; // Возвращаем имя шаблона
+        return "index";
     }
 }

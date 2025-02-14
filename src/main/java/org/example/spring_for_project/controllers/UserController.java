@@ -36,7 +36,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            log.info("Попытка регистрации пользователя с email: {}", user.getEmail());
+            log.info("Attempting to register a user with email: {}", user.getEmail());
 
             user.setCreatedAt(LocalDateTime.now());
 
@@ -44,15 +44,15 @@ public class UserController {
 
             sessionService.setCurrentUser(savedUser);
 
-            log.info("Пользователь успешно зарегистрирован с ID: {}", savedUser.getId());
+            log.info("User successfully registered with ID: {}", savedUser.getId());
             return ResponseEntity.ok().body(savedUser);
 
         } catch (IllegalArgumentException e) {
-            log.error("Ошибка при регистрации пользователя: {}", e.getMessage());
+            log.error("Error during user registration: {}", e.getMessage());
             return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
         } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().body("{\"error\": \"Неожиданная ошибка сервера\"}");
+            log.error("Unexpected mistake: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().body("{\"error\": \"Unexpected server error\"}");
         }
     }
 
