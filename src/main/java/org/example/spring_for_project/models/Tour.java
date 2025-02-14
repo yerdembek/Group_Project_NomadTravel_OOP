@@ -43,7 +43,7 @@ public class Tour {
 
     @ElementCollection
     @CollectionTable(name = "tour_images", joinColumns = @JoinColumn(name = "tour_id"))
-    @Column(name = "image_url") // Таблица для хранения URL изображений
+    @Column(name = "image_url")
     private List<String> images;
 
 

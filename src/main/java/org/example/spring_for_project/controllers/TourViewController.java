@@ -28,20 +28,9 @@ public class TourViewController {
     public String getTourDetails(@PathVariable Long id, Model model) {
         tourService.getTourById(id).ifPresentOrElse(
                 tour -> model.addAttribute("tour", tour),
-                () -> model.addAttribute("error", "Тур не найден!")
+                () -> model.addAttribute("error", "Tour not found!")
         );
         return "tour-details";
-    }
-
-
-    @GetMapping("/tours/filter")
-    public String getFilteredTours(
-            @RequestParam(required = false) String category,
-            Model model
-    ) {
-        List<Tour> filteredTours = tourService.getToursByCategory(category);
-        model.addAttribute("tours", filteredTours);
-        return "tour-list";
     }
 
     @GetMapping("/tours/{id}/book")

@@ -22,10 +22,10 @@ public class UserService implements UserServiceInterface {
 
     public User authenticate(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователь с таким email не найден"));
+                .orElseThrow(() -> new IllegalArgumentException("No user with this email address was found"));
 
         if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Неверный пароль");
+            throw new IllegalArgumentException("Incorrect password");
         }
 
         return user;
@@ -45,11 +45,11 @@ public class UserService implements UserServiceInterface {
     @Transactional
     public User registerUser(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
-            log.error("Email пустой");
+            log.error("Email empty");
             throw new IllegalArgumentException("Email cannot be empty");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            log.error("Email уже существует: {}", user.getEmail());
+            log.error("Email already exists: {}", user.getEmail());
             throw new IllegalArgumentException("Email is already in use");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -60,7 +60,7 @@ public class UserService implements UserServiceInterface {
 
         User savedUser = userRepository.save(user);
 
-        log.info("Пользователь сохранён в базу с ID: {}", savedUser.getId());
+        log.info("The user is saved in the database with ID: {}", savedUser.getId());
         return savedUser;
     }
 
